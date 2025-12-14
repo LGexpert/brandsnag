@@ -1,0 +1,23 @@
+{
+  "name": "@acme/shared",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm -w exec tsup packages/shared/src/index.ts --format esm,cjs --dts --outDir packages/shared/dist --clean",
+    "dev": "pnpm -w exec tsup packages/shared/src/index.ts --format esm,cjs --dts --outDir packages/shared/dist --watch",
+    "lint": "pnpm -w exec eslint packages/shared/src --ext .ts",
+    "typecheck": "pnpm -w exec tsc -p packages/shared/tsconfig.json --noEmit",
+    "test": "pnpm -w exec vitest run --root packages/shared --passWithNoTests"
+  }
+}

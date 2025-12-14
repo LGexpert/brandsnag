@@ -1,0 +1,20 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
+COPY apps/backend/package.json apps/backend/package.json
+COPY packages/shared/package.json packages/shared/package.json
+COPY packages/shared/tsconfig.json packages/shared/tsconfig.json
+COPY packages/shared/src packages/shared/src
+
+RUN pnpm install --frozen-lockfile
+
+COPY apps/backend apps/backend
+COPY packages/shared packages/shared
+
+WORKDIR /app/apps/backend
+
+CMD ["pnpm", "db:migrate"]
