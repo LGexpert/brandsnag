@@ -1,0 +1,17 @@
+# dependencies
+node_modules
+
+# build outputs
+dist
+build
+coverage
+.vite
+
+# env
+.env
+
+# logs
+*.log
+
+# misc
+.DS_Store

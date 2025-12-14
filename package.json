@@ -1,0 +1,41 @@
+{
+  "name": "fullstack-workspace",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter ./apps/* dev",
+    "build": "pnpm -r --sort build",
+    "test": "pnpm -r --sort test",
+    "lint": "pnpm -w exec eslint . --ext .ts,.tsx,.js,.jsx,.cjs,.mjs",
+    "lint:fix": "pnpm -w exec eslint . --ext .ts,.tsx,.js,.jsx,.cjs,.mjs --fix",
+    "format": "pnpm -w exec prettier -w .",
+    "format:check": "pnpm -w exec prettier -c .",
+    "typecheck": "pnpm -r --sort typecheck",
+    "prepare": "husky",
+    "postinstall": "pnpm --filter @acme/shared build"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,json,md,yml,yaml,css,scss,html}": [
+      "prettier --write"
+    ],
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
+  }
+}
