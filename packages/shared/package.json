@@ -13,6 +13,9 @@
       "default": "./dist/index.js"
     }
   },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
   "scripts": {
     "build": "pnpm -w exec tsup packages/shared/src/index.ts --format esm,cjs --dts --outDir packages/shared/dist --clean",
     "dev": "pnpm -w exec tsup packages/shared/src/index.ts --format esm,cjs --dts --outDir packages/shared/dist --watch",

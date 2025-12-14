@@ -143,7 +143,11 @@ importers:
         specifier: ^6.0.6
         version: 6.4.1(@types/node@22.19.3)(yaml@2.8.2)
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
 
 packages:
 
