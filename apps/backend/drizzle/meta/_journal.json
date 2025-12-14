@@ -8,6 +8,13 @@
       "when": 1765738334727,
       "tag": "0000_sweet_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1765740034018,
+      "tag": "0001_loud_vulture",
+      "breakpoints": true
     }
   ]
 }

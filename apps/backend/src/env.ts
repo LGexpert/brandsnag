@@ -14,6 +14,11 @@ const envSchema = z.object({
   LOG_LEVEL: z.string().optional(),
   NODE_ENV: z.string().optional(),
 
+  JWT_SECRET: z.string().min(1),
+  JWT_REFRESH_SECRET: z.string().min(1),
+  JWT_EXPIRES_IN: z.string().default('15m'),
+  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
+
   CHECK_HTTP_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
   CHECK_CACHE_TTL_MS: z.coerce.number().int().positive().default(60_000),
   CHECK_PER_PLATFORM_CONCURRENCY: z.coerce.number().int().positive().default(3),
