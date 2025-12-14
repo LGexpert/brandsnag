@@ -4,6 +4,7 @@ import pinoHttp from 'pino-http'
 
 import { env } from './env'
 import { logger } from './logger'
+import { checkRouter } from './routes/check'
 import { healthRouter } from './routes/health'
 
 export function createApp() {
@@ -28,6 +29,12 @@ export function createApp() {
   app.use(express.json())
 
   app.use(healthRouter)
+  app.use(checkRouter)
+
+  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    const message = err instanceof Error ? err.message : 'unknown error'
+    res.status(500).json({ error: 'internal_error', message })
+  })
 
   return app
 }
