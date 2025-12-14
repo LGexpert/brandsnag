@@ -11,7 +11,12 @@ import { createConcurrencyLimiter } from './limiters'
 import { DEFAULT_PLATFORM_DEFINITIONS, DEFAULT_PLATFORM_KEYS } from './platformDefinitions'
 import { PlatformAdapterRegistry } from './platformRegistry'
 import { generateHandleSuggestions } from './suggestions'
-import type { BulkHandleCheckResponse, HandleCheckResponse, PlatformCheckResult, PlatformDefinition } from './types'
+import type {
+  BulkHandleCheckResponse,
+  HandleCheckResponse,
+  PlatformCheckResult,
+  PlatformDefinition,
+} from './types'
 
 export type HandleCheckServiceConfig = {
   cacheTtlMs: number
@@ -21,10 +26,7 @@ export type HandleCheckServiceConfig = {
   bulkMaxConcurrency: number
 }
 
-export type PartialResultCallback = (args: {
-  handle: string
-  result: PlatformCheckResult
-}) => void
+export type PartialResultCallback = (args: { handle: string; result: PlatformCheckResult }) => void
 
 export class HandleCheckService {
   private readonly registry: PlatformAdapterRegistry
@@ -44,10 +46,13 @@ export class HandleCheckService {
   async checkHandle(args: {
     handle: string
     platformKeys?: string[]
+    userId?: number
     onPartial?: PartialResultCallback
   }): Promise<HandleCheckResponse> {
     const handle = args.handle.trim()
-    const platformKeys = (args.platformKeys?.length ? args.platformKeys : DEFAULT_PLATFORM_KEYS).slice()
+    const platformKeys = (
+      args.platformKeys?.length ? args.platformKeys : DEFAULT_PLATFORM_KEYS
+    ).slice()
 
     const requestedAt = new Date().toISOString()
 
@@ -93,6 +98,7 @@ export class HandleCheckService {
             platformKey,
             platformId: def.platformId ?? null,
             result,
+            userId: args.userId,
           })
 
           return result
@@ -114,7 +120,9 @@ export class HandleCheckService {
           return result
         }
 
-        const adapterResult = await this.registry.runLimited(platformKey, () => adapter.check(handle))
+        const adapterResult = await this.registry.runLimited(platformKey, () =>
+          adapter.check(handle),
+        )
 
         const result: PlatformCheckResult = {
           platformKey,
@@ -144,6 +152,7 @@ export class HandleCheckService {
           platformKey,
           platformId: def.platformId ?? null,
           result,
+          userId: args.userId,
         })
 
         return result
@@ -160,6 +169,7 @@ export class HandleCheckService {
   async checkBulk(args: {
     handles: string[]
     platformKeys?: string[]
+    userId?: number
     onPartial?: PartialResultCallback
   }): Promise<BulkHandleCheckResponse> {
     const handles = args.handles.map((h) => h.trim()).filter(Boolean)
@@ -171,6 +181,7 @@ export class HandleCheckService {
           return await this.checkHandle({
             handle,
             platformKeys: args.platformKeys,
+            userId: args.userId,
             onPartial: args.onPartial,
           })
         })
@@ -262,7 +273,9 @@ export class HandleCheckService {
 
     const missing = platformKeys.filter((k) => !defs.get(k)?.platformId)
 
-    const missingDefs: PlatformDefinition[] = DEFAULT_PLATFORM_DEFINITIONS.filter((d) => missing.includes(d.key))
+    const missingDefs: PlatformDefinition[] = DEFAULT_PLATFORM_DEFINITIONS.filter((d) =>
+      missing.includes(d.key),
+    )
 
     if (missingDefs.length > 0) {
       await db
@@ -294,7 +307,12 @@ export class HandleCheckService {
           sortOrder: platforms.sortOrder,
         })
         .from(platforms)
-        .where(inArray(platforms.key, missingDefs.map((d) => d.key)))
+        .where(
+          inArray(
+            platforms.key,
+            missingDefs.map((d) => d.key),
+          ),
+        )
 
       for (const row of afterInsert) {
         defs.set(row.key, {
@@ -317,6 +335,7 @@ export class HandleCheckService {
     platformKey: string
     platformId: number | null
     result: PlatformCheckResult
+    userId?: number
   }) {
     const db = getDb()
     if (!db) return
@@ -324,6 +343,7 @@ export class HandleCheckService {
 
     try {
       await db.insert(usernameChecks).values({
+        userId: args.userId ?? null,
         platformId: args.platformId,
         handle: args.handle,
         source: 'manual',

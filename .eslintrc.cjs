@@ -16,6 +16,10 @@ module.exports = {
     'prettier',
   ],
   settings: {
+    'import/resolver': {
+      typescript: true,
+      node: true,
+    },
     react: {
       version: 'detect',
     },
@@ -52,6 +56,9 @@ module.exports = {
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
     'import/no-unresolved': ['error', { ignore: ['.css$'] }],
+    'import/default': 'off',
+    'import/no-named-as-default': 'off',
+    'import/no-named-as-default-member': 'off',
     'import/order': [
       'error',
       {

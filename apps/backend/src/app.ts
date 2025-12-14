@@ -4,8 +4,12 @@ import pinoHttp from 'pino-http'
 
 import { env } from './env'
 import { logger } from './logger'
+import { authRouter } from './routes/auth'
 import { checkRouter } from './routes/check'
+import { favoritesRouter } from './routes/favorites'
 import { healthRouter } from './routes/health'
+import { historyRouter } from './routes/history'
+import { watchlistRouter } from './routes/watchlist'
 
 export function createApp() {
   const app = express()
@@ -29,12 +33,18 @@ export function createApp() {
   app.use(express.json())
 
   app.use(healthRouter)
+  app.use(authRouter)
   app.use(checkRouter)
+  app.use(favoritesRouter)
+  app.use(watchlistRouter)
+  app.use(historyRouter)
 
-  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    const message = err instanceof Error ? err.message : 'unknown error'
-    res.status(500).json({ error: 'internal_error', message })
-  })
+  app.use(
+    (err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+      const message = err instanceof Error ? err.message : 'unknown error'
+      res.status(500).json({ error: 'internal_error', message })
+    },
+  )
 
   return app
 }

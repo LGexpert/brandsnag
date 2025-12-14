@@ -10,6 +10,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
+export const userRoleEnum = pgEnum('user_role', ['user', 'admin'])
 export const platformStatusEnum = pgEnum('platform_status', ['active', 'disabled'])
 export const sessionStatusEnum = pgEnum('session_status', ['active', 'revoked', 'expired'])
 export const usernameCheckSourceEnum = pgEnum('username_check_source', ['manual', 'watchlist'])
@@ -36,7 +37,9 @@ export const users = pgTable(
   {
     id: serial('id').primaryKey(),
     email: text('email').notNull(),
+    passwordHash: text('password_hash').notNull(),
     displayName: text('display_name'),
+    role: userRoleEnum('role').default('user').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -108,6 +111,8 @@ export const favorites = pgTable(
       .notNull()
       .references(() => platforms.id, { onDelete: 'restrict' }),
     handle: text('handle').notNull(),
+    tags: text('tags'),
+    notes: text('notes'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -139,6 +144,8 @@ export const watchlistItems = pgTable(
     status: watchlistItemStatusEnum('status').default('active').notNull(),
     lastStatus: usernameCheckStatusEnum('last_status'),
     lastCheckedAt: timestamp('last_checked_at', { withTimezone: true }),
+    tags: text('tags'),
+    notes: text('notes'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()

@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from 'express'
 import { z } from 'zod'
 
 import { env } from '../env'
+import { optionalAuth, type AuthRequest } from '../middleware/auth'
 import { HandleCheckService } from '../services/handleChecks/handleCheckService'
 import { handleSchema, platformKeySchema } from '../services/handleChecks/types'
 
@@ -47,7 +48,7 @@ function writeSse(res: Response, event: string, data: unknown) {
   res.write(`data: ${JSON.stringify(data)}\n\n`)
 }
 
-checkRouter.post('/api/check', async (req, res) => {
+checkRouter.post('/api/check', optionalAuth, async (req: AuthRequest, res) => {
   const parse = checkRequestSchema.safeParse(req.body)
   if (!parse.success) {
     return res.status(400).json({
@@ -60,6 +61,7 @@ checkRouter.post('/api/check', async (req, res) => {
     const payload = await service.checkHandle({
       handle: parse.data.handle,
       platformKeys: parse.data.platformKeys,
+      userId: req.user?.userId,
     })
 
     return res.json(payload)
@@ -86,6 +88,7 @@ checkRouter.post('/api/check', async (req, res) => {
     const payload = await service.checkHandle({
       handle: parse.data.handle,
       platformKeys: parse.data.platformKeys,
+      userId: req.user?.userId,
       onPartial: ({ handle, result }) => {
         if (closed) return
         writeSse(res, 'result', { handle, result })
@@ -105,7 +108,7 @@ checkRouter.post('/api/check', async (req, res) => {
   }
 })
 
-checkRouter.post('/api/check/bulk', async (req, res) => {
+checkRouter.post('/api/check/bulk', optionalAuth, async (req: AuthRequest, res) => {
   const parse = bulkCheckRequestSchema.safeParse(req.body)
   if (!parse.success) {
     return res.status(400).json({
@@ -125,6 +128,7 @@ checkRouter.post('/api/check/bulk', async (req, res) => {
     const payload = await service.checkBulk({
       handles: parse.data.handles,
       platformKeys: parse.data.platformKeys,
+      userId: req.user?.userId,
     })
 
     return res.json(payload)
@@ -151,6 +155,7 @@ checkRouter.post('/api/check/bulk', async (req, res) => {
     const payload = await service.checkBulk({
       handles: parse.data.handles,
       platformKeys: parse.data.platformKeys,
+      userId: req.user?.userId,
       onPartial: ({ handle, result }) => {
         if (closed) return
         writeSse(res, 'result', { handle, result })
