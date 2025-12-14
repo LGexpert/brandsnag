@@ -34,6 +34,14 @@ const DEFAULT_PLATFORMS: PlatformSeed[] = [
     sortOrder: 10,
   },
   {
+    key: 'facebook',
+    name: 'Facebook',
+    baseUrl: 'https://www.facebook.com',
+    profileUrlTemplate: 'https://www.facebook.com/{handle}',
+    handleRegex: '^[A-Za-z0-9.]{5,50}$',
+    sortOrder: 15,
+  },
+  {
     key: 'x',
     name: 'X',
     baseUrl: 'https://x.com',
@@ -64,6 +72,30 @@ const DEFAULT_PLATFORMS: PlatformSeed[] = [
     profileUrlTemplate: 'https://www.reddit.com/user/{handle}/',
     handleRegex: '^[A-Za-z0-9_-]{3,20}$',
     sortOrder: 50,
+  },
+  {
+    key: 'twitch',
+    name: 'Twitch',
+    baseUrl: 'https://www.twitch.tv',
+    profileUrlTemplate: 'https://www.twitch.tv/{handle}',
+    handleRegex: '^[A-Za-z0-9_]{4,25}$',
+    sortOrder: 60,
+  },
+  {
+    key: 'youtube',
+    name: 'YouTube',
+    baseUrl: 'https://www.youtube.com',
+    profileUrlTemplate: 'https://www.youtube.com/@{handle}',
+    handleRegex: '^[A-Za-z0-9._-]{3,30}$',
+    sortOrder: 70,
+  },
+  {
+    key: 'pinterest',
+    name: 'Pinterest',
+    baseUrl: 'https://www.pinterest.com',
+    profileUrlTemplate: 'https://www.pinterest.com/{handle}/',
+    handleRegex: '^[A-Za-z0-9_]{3,30}$',
+    sortOrder: 80,
   },
 ]
 
