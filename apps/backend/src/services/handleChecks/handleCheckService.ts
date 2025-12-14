@@ -66,6 +66,7 @@ export class HandleCheckService {
 
         if (!def) {
           const result: PlatformCheckResult = {
+            platformId: null,
             platformKey,
             platformName,
             status: 'unknown',
@@ -82,6 +83,7 @@ export class HandleCheckService {
         const handleRegex = def.handleRegex ? new RegExp(def.handleRegex) : null
         if (handleRegex && !handleRegex.test(handle)) {
           const result: PlatformCheckResult = {
+            platformId: def.platformId ?? null,
             platformKey,
             platformName: def.name,
             status: 'invalid',
@@ -107,6 +109,7 @@ export class HandleCheckService {
         const adapter = await this.getOrCreateAdapter(platformKey, def)
         if (!adapter) {
           const result: PlatformCheckResult = {
+            platformId: def.platformId ?? null,
             platformKey,
             platformName: def.name,
             status: 'unknown',
@@ -125,6 +128,7 @@ export class HandleCheckService {
         )
 
         const result: PlatformCheckResult = {
+          platformId: def.platformId ?? null,
           platformKey,
           platformName: def.name,
           status: usernameCheckStatusSchema.parse(adapterResult.status),

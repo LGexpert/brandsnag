@@ -9,6 +9,7 @@ import { checkRouter } from './routes/check'
 import { favoritesRouter } from './routes/favorites'
 import { healthRouter } from './routes/health'
 import { historyRouter } from './routes/history'
+import { platformsRouter } from './routes/platforms'
 import { watchlistRouter } from './routes/watchlist'
 
 export function createApp() {
@@ -35,6 +36,7 @@ export function createApp() {
   app.use(healthRouter)
   app.use(authRouter)
   app.use(checkRouter)
+  app.use(platformsRouter)
   app.use(favoritesRouter)
   app.use(watchlistRouter)
   app.use(historyRouter)
