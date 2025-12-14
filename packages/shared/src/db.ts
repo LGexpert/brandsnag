@@ -6,6 +6,9 @@ const isoDateTimeSchema = z.string().datetime()
 export const platformStatusSchema = z.enum(['active', 'disabled'])
 export type PlatformStatus = z.infer<typeof platformStatusSchema>
 
+export const userRoleSchema = z.enum(['user', 'admin'])
+export type UserRole = z.infer<typeof userRoleSchema>
+
 export const sessionStatusSchema = z.enum(['active', 'revoked', 'expired'])
 export type SessionStatus = z.infer<typeof sessionStatusSchema>
 
@@ -31,6 +34,7 @@ export const userSchema = z.object({
   id: idSchema,
   email: z.string().email(),
   displayName: z.string().nullable(),
+  role: userRoleSchema,
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 })
@@ -71,6 +75,8 @@ export const favoriteSchema = z.object({
   userId: idSchema,
   platformId: idSchema,
   handle: z.string().min(1),
+  tags: z.string().nullable(),
+  notes: z.string().nullable(),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 })
@@ -84,6 +90,8 @@ export const watchlistItemSchema = z.object({
   status: watchlistItemStatusSchema,
   lastStatus: usernameCheckStatusSchema.nullable(),
   lastCheckedAt: isoDateTimeSchema.nullable(),
+  tags: z.string().nullable(),
+  notes: z.string().nullable(),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 })

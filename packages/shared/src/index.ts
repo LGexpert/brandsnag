@@ -3,4 +3,5 @@ export type HealthResponse = {
   timestamp: string
 }
 
+export * from './api'
 export * from './db'

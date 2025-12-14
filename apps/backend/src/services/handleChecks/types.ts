@@ -14,6 +14,7 @@ export const handleSchema = z
 export type Handle = z.infer<typeof handleSchema>
 
 export const platformCheckResultSchema = z.object({
+  platformId: z.number().int().positive().nullable(),
   platformKey: platformKeySchema,
   platformName: z.string().min(1),
   status: usernameCheckStatusSchema,
